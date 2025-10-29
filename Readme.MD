@@ -127,6 +127,16 @@
 
         Now, when we hit kubectl get pods >>> this will try to get the pods in a default namespace and as a result we get error on the screen because we have given access to the roboshop namespace
 
+        Authentication is successful and Authorization is failure. To over come this please mention the namespace in the command
+
+        If u notice the role yaml file, we are maintaining some rules, which include access to the resource and what action the user can take on thta resource.
+        Always make sure the rules are mentioned with in the role only...
+        Understand that for every role we create we should maintain a specific rolebinding for it to bind the user(role)
+
+        But, in our case, we are giving the user name itself in the rolebinding yaml file
+
+        
+
 
 
 
