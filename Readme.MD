@@ -117,7 +117,7 @@
 
         sudo cp kubectl /usr/local/bin/kubectl   >>> copying kubectl to aother folder
 
-        Done
+        Done, now user can have access
 
         aws sts get-caller-identity   >>> command to see who has loggedin
             this command displays the user who has logged in and his details like ARN and the AWS accountID
