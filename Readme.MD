@@ -4,7 +4,7 @@
         ServiceAccount and 
         ClusterRole
 
-#### understanding RBAC
+#### Understanding RBAC
 
     RBAC is basically about Authentication and Authorization
 
@@ -25,5 +25,5 @@
         Team Lead  Delete access
     So, for this we create roles and attach them to the specific rolebinding i.e., (Which role is binded to which user)
 
-    
+
         
