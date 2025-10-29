@@ -77,4 +77,56 @@
     And he has to login to the newly created EC2 instance and do a regular AWS configure i.e., using secretkey and access keys.
     Create a the secretkey and accesskey for this user and he should loginto the newly created ec2 via aws console using the credentials
 
-    
+    Now we have to pull the code code related to the RBAC into our regular worker node from where we are doing all the kubectl operations and create the role and rolebinding also make sure we create a namespace before this...
+
+    To integrate the AWS IAM user with the k8s, we have some configmap in the kubesystem namespace and AWS has provided a document as well -- https://docs.aws.amazon.com/eks/latest/userguide/auth-configmap.html
+
+    Below is the Configmap which we have in kubesystem namespace 
+
+    apiVersion: v1
+    data:
+        mapRoles: |
+            - rolearn: arn:aws:iam::315069654700:role/eksctl-roboshop-dev-nodegroup-robo-NodeInstanceRole-TtRghdCKdBjV
+            groups:
+                - system:bootstrappers
+                - system:nodes
+            username: system:node:{{EC2PrivateDNSName}}
+        mapUsers: |
+            - groups:
+              - roboshop-trainee  # role which we created for the user
+            userarn: arn:aws:iam::315069654700:user/suresh   # arn of the user which we created
+            username: suresh # username which we created
+    kind: ConfigMap
+    metadata:
+        creationTimestamp: "2025-08-06T01:47:38Z"
+        name: aws-auth
+        namespace: kube-system
+        uid: 7c47ebd8-d158-4e4e-b0e3-dce2584f27a6
+
+    Now, if we apply this aws-auth.yaml file, this user will be added to our kebesystem and he can access the cluster with the given permissions
+
+    If we check the configmap after applying, we can see the extra annotations
+
+    ### NOW USER NEEDS TO LOGINTO THE NEWLY CREATED EC2 MACHINE
+
+        make sure we have kubectl on this...
+
+        curl -O https://s3.us-west-2.amazonaws.com/amazon-eks/1.33.5/2025-09-19/bin/linux/amd64/kubectl   >>> this command to install kubectl
+
+        chmod +x ./kubectl   >>> providing execute permissions
+
+        sudo cp kubectl /usr/local/bin/kubectl   >>> copying kubectl to aother folder
+
+        Done
+
+        aws sts get-caller-identity   >>> command to see who has loggedin
+            this command displays the user who has logged in and his details like ARN and the AWS accountID
+        aws eks update-kubeconfig --region us-east-1 --name roboshop-dev  >>> Connect kubectl to an EKS cluster by creating a kubeconfig file i.e., to have the EKS access
+
+        https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html  >>> refer this do for the above commands and as well as to understand how the authentication happens in an EKS cluster 
+
+
+
+
+
+
