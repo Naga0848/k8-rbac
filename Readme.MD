@@ -69,6 +69,12 @@
             kind: Role #this must be Role or ClusterRole
             name:  roboshop-lead # this must match the name of the Role or ClusterRole you wish to bind to
             apiGroup: rbac.authorization.k8s.io
-            
+
     Above is the role created for a user(trainee) and we are attaching this role to rolebinding.
     Rolebinding will have the info about the role and the concerned user which we created in AWS IAM
+
+    This user is like an EKS Admin or something related to EKS team.
+    And he has to login to the newly created EC2 instance and do a regular AWS configure i.e., using secretkey and access keys.
+    Create a the secretkey and accesskey for this user and he should loginto the newly created ec2 via aws console using the credentials
+
+    
