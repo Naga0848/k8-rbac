@@ -135,7 +135,9 @@
 
         But, in our case, we are giving the user name itself in the rolebinding yaml file
 
-        
+        #### If the hirearcy of this user in the organisation is increasing, we can give access to all the resources and take the necessary actions accourding to the rules we mentioned in this role
+
+        ### He can get the info about the pvc as this is a namespace level object and if this user wants to see the object at the cluster level, we have something called clusterRole
 
 
 
