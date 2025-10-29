@@ -125,7 +125,7 @@
 
         https://docs.aws.amazon.com/eks/latest/userguide/create-kubeconfig.html  >>> refer this do for the above commands and as well as to understand how the authentication happens in an EKS cluster 
 
-
+        Now, when we hit kubectl get pods >>> this will try to get the pods in a default namespace and as a result we get error on the screen because we have given access to the roboshop namespace
 
 
 
