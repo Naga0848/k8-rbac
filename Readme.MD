@@ -33,6 +33,40 @@
         -- He need to list his cluster
         -- we need to integrate IAM user with k8 Role
 
+    User creation Steps
+        IAM >>> create user
+        Policies >>> create a policy >>> select a service(EKS) >>> Read (Describe cluster) >>> Add ARNs (we need to give our region name and clustername so that it forms the ARN) >>> Now give the policy name and create a policy
+        IAM >>> user >>> attach policy >>> search for the policy we created and attach it to the user we created
     For this we have to create a Role and Rolebinding(this has to be attached an IAM user which we created)  
 
-    
+    #### Creating a Role for a user(trainee) and we attach this role to a rolebinding and a user
+
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: Role
+        metadata:
+            namespace: roboshop
+            name: roboshop-trainee
+        rules:
+        - apiGroups: [""] # "" indicates the core API group(deployments, services, etc...)
+          resources: ["pods"] # nouns
+          verbs: ["get", "watch", "list"] # actions
+        -----
+        apiVersion: rbac.authorization.k8s.io/v1
+        # This role binding allows "jane" to read pods in the "default" namespace.
+        # You need to already have a Role named "pod-reader" in that namespace.
+        kind: RoleBinding
+        metadata:
+            name: suresh
+            namespace: roboshop
+        subjects:
+        # You can specify more than one "subject"
+        - kind: User
+          name: suresh # "name" is case sensitive
+          apiGroup: rbac.authorization.k8s.io
+        roleRef:
+            # "roleRef" specifies the binding to a Role / ClusterRole
+            kind: Role #this must be Role or ClusterRole
+            name:  roboshop-lead # this must match the name of the Role or ClusterRole you wish to bind to
+            apiGroup: rbac.authorization.k8s.io
+    Above is the role created for a user(trainee) and we are attaching this role to rolebinding.
+    Rolebinding will have the info about the role and the concerned user which we created in AWS IAM
