@@ -274,3 +274,11 @@
       we can see that the pod is fetching the secret from AWS and displaying to us using a SA.
 
     As we are having ASW CLI, we are able to look at fetch and look at our secret value from the workernode, but for pods in our applications we dont use aws-cli image and as a result we have something called init containers
+
+#### Final Understanding on ServiceAccount
+
+    As a humans if we want to access the resources in k8, we create an IAM user, attach policy to the user and create role and rolebinding and attach it to the user and finally when we created all the resources like role, rolebinding, we are able to access and take the necessary action on the k8 resources using that IAM user.
+
+    If a pod want to communicate with the resources outside the cluster, it should have the ServiceAccount
+
+    https://youtu.be/hYQnleGXnSQ?si=63-SX1UMKqYPM7KI  >>>> watch this video to understand the topics like role, rolebinding and the serviceaccount
