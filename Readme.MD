@@ -242,5 +242,35 @@
       name:  sa-reader # this must match the name of the Role or ClusterRole you wish to bind to
       apiGroup: rbac.authorization.k8s.io
 
+    https://docs.aws.amazon.com/cli/latest/reference/secretsmanager/get-secret-value.html  >>> use his document To retrieve the encrypted secret value of a secret
 
+    aws secretsmanager get-secret-value \
+    --secret-id roboshop/mysql/password
+    this is the command from the above document to retrive the secret
+    roboshop/mysql/password >>> this is the secret we created in the AWS
+    Now the above command will display the value in our secret.
 
+    And now, we should be getting this secret via a pod by using SA i.e., we should(pod) be able to access the secrets in AWS by using the SA created for it 
+
+    Now we should create a pod for this SA using the aws-cli image
+
+    apiVersion: v1
+    kind: Pod
+    metadata:
+      name: aws-cli
+      namespace: roboshop
+      labels:
+        purpose: sa
+    spec:
+      serviceAccount: roboshop-mysql-secret-reader
+      containers:
+      - name: awscli
+      image: amazon/aws-cli
+      command: ["sleep","10000"]
+
+      after executing this command, get inside the pod using kubectl exec -it asw-cli -n roboshop and if we run the command 
+      aws secretsmanager get-secret-value \
+      --secret-id roboshop/mysql/password  
+      we can see that the pod is fetching the secret from AWS and displaying to us using a SA.
+
+    As we are having ASW CLI, we are able to look at fetch and look at our secret value from the workernode, but for pods in our applications we dont use aws-cli image and as a result we have something called init containers
