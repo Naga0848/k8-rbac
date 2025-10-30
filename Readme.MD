@@ -166,7 +166,81 @@
 
     Apply these two files via the workernode and see for the commands related to pv, now the user can see the cluster level objects like PV
 
-    
+#### Service Account
+
+    It is non human user that pod uses to run. by default when we create namespace a serviceaccount with name is default is created.
+
+    Default service account will not have much permissions and these are created for thr pod i.e., if  pod want to communicate with other services in the cluster or if it want to fetch any details like passwords from AWS, it uses SA and communicates with other services
+
+    #### Steps to integrate a ServiceAccount in a Cluster
+
+    We need to have an OIDC provider as we are going to interact with AWS for secrets
+
+    1. Create OIDC provider
+
+    REGION_CODE=us-east-1
+    CLUSTER_NAME=roboshop-dev
+    ACC_ID=315069654700
+
+    eksctl utils associate-iam-oidc-provider \
+    --region $REGION_CODE \
+    --cluster $CLUSTER_NAME \
+    --approve
+
+    2. create a secret with the name RoboShopMySQLSecretReader and create a policy for the secretmanager(GetSecretValue) and we can mention the ARN of the secret which we created.
+
+    arn:aws:iam::315069654700:policy/RoboShopMySQLSecretReader   >>> ARN of Policy
+
+    3. creating service account
+
+    eksctl create iamserviceaccount \
+    --cluster=$CLUSTER_NAME \
+    --namespace=roboshop \
+    --name=roboshop-mysql-secret-reader \
+    --attach-policy-arn=arn:aws:iam::315069654700:policy/RoboShopMySQLSecretReader \
+    --override-existing-serviceaccounts \
+    --region $REGION_CODE \
+    --approve
+
+    this command creates IAM role and SA and integrates them
+
+    In the above command make sure we have the arn of the policy and the secretname and namespace as roboshop and please change the region and the account id accordingly
+
+    When we are running the aove command to create the SA, by default AWS is creating a role and attaching it to our SA. We can check this in our SA yaml file
+    kbectl get sa roboshop-mysql-secret-reader -n roboshop -o yaml
+    we can see a role is created and attached to this SA
+
+    Now, as we have service account in place, we should create a role and rolebinding for this SA
+
+    Below are the yamls for role, rolebinding and pod
+
+    apiVersion: rbac.authorization.k8s.io/v1
+    kind: Role
+    metadata:
+        namespace: roboshop
+        name: sa-reader
+    rules:
+    - apiGroups: ["*"] # "" indicates the core API group
+      resources: ["*"] # nouns
+      verbs: ["get", "watch", "list"] # actions
+    ---
+    apiVersion: rbac.authorization.k8s.io/v1
+    # This role binding allows "jane" to read pods in the "default" namespace.
+    # You need to already have a Role named "pod-reader" in that namespace.
+    kind: RoleBinding
+    metadata:
+      name: sa-reader
+      namespace: roboshop
+    subjects:
+    # You can specify more than one "subject"
+    - kind: ServiceAccount
+      name: roboshop-mysql-secret-reader # "name" is case sensitive
+      namespace: roboshop
+    roleRef:
+      # "roleRef" specifies the binding to a Role / ClusterRole
+      kind: Role #this must be Role or ClusterRole
+      name:  sa-reader # this must match the name of the Role or ClusterRole you wish to bind to
+      apiGroup: rbac.authorization.k8s.io
 
 
 
