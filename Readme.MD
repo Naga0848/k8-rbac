@@ -139,6 +139,31 @@
 
         ### He can get the info about the pvc as this is a namespace level object and if this user wants to see the object at the cluster level, we have something called clusterRole
 
+        Below are the yamls for ClusterRole and ClusterRolebinding
+
+        apiVersion: rbac.authorization.k8s.io/v1
+        kind: ClusterRole
+        metadata:
+          name: roboshop-cluster
+        rules:
+        - apiGroups: [""]
+          resources: ["persistentvolumes"]
+          verbs: ["get", "list", "watch"]
+        ---
+        apiVersion: rbac.authorization.k8s.io/v1
+        # This cluster role binding allows anyone in the "manager" group to read secrets in any namespace.
+        kind: ClusterRoleBinding
+        metadata:
+            name: roboshop-cluster
+        subjects:
+        - kind: User
+          name: suresh # Name is case sensitive
+          apiGroup: rbac.authorization.k8s.io
+        roleRef:
+          kind: ClusterRole
+          name: roboshop-cluster
+          apiGroup: rbac.authorization.k8s.io
+
 
 
 
