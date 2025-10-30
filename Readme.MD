@@ -164,6 +164,9 @@
           name: roboshop-cluster
           apiGroup: rbac.authorization.k8s.io
 
+    Apply these two files via the workernode and see for the commands related to pv, now the user can see the cluster level objects like PV
+
+    
 
 
 
