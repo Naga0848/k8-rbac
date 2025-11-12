@@ -295,3 +295,31 @@
     If your pod want to talk to the resources internall or even out side the cluster, we should go via a service account only
 
     Service account will have a role, rolebinding and IAM policy
+
+    If we are using a SA, we need not to refer our configmaps or secrets in the deployment yaml file using envfrom variable
+
+#### Init Containers
+  
+    init containers before main containers run in kubernetes. they make sure all the dependencies are setup like fetching secrets, make sure other services are running, etc..
+
+    Init containers always run to completion
+    Each init container must complete successfully before the next one starts.
+
+    How you make the secret avaialable to main container...
+
+      init container fetch secret and store it inside file. main container can get read the file and set it as env variable...
+
+      pods by default uses node storage. If pod gets deleted, this storage also will be deleted. So storage lies until pod lives. these are ephemeral volumes...
+
+      then we need to use volumes...
+
+      1. empheral volumes --> temp storage required by pod
+	        * emptyDir --> if you want to share storage to all the containers inside pod, we can go for emptyDir
+	        * hostPath
+      2. external volumes --> by default we made is retain
+
+      Here we are using a amazon/aws-cli image to create an init container for mysql in order to get the password from the aws secret manager and store it in the volumes, so that the original container can use it and access the mysql
+
+        https://github.com/daws-84s/k8-roboshop/tree/main/mysql  is the path for the init container
+
+        
