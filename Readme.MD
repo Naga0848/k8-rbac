@@ -284,4 +284,5 @@
     https://youtu.be/hYQnleGXnSQ?si=63-SX1UMKqYPM7KI  >>>> watch this video to understand the topics like role, rolebinding and the serviceaccount
 
 
-    ![alt text](serviceaccount.png)
+  ![Descriptive Alt Text](images/serviceaccount.png)
+
