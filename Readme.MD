@@ -288,7 +288,10 @@
   ![App Screenshot](images/serviceaccount.png)
 
 #### Understanding the image
-    ServiceAccount
-      non human rbac resource attached to pod access kube-api server and external resources provisioning like load balancer, accessing secrets, etc..
+    ServiceAccount is a non human rbac resource attached to pod access kube-api server and external resources provisioning like load balancer, accessing secrets, etc..
 
-      when we create a namespace kubernetes will create default sa. by default all pods run with default sa...
+    when we create a namespace kubernetes will create default sa. by default all pods run with default sa...
+
+    If your pod want to talk to the resources internall or even out side the cluster, we should go via a service account only
+
+    Service account will have a role, rolebinding and IAM policy
